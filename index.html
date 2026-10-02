@@ -1,0 +1,873 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Quiz Era Vargas</title><style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #171717, #444);
+    color: #222;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+}
+
+/* TELAS */
+
+.inicio,
+.entrada,
+.pergunta-box,
+#resultado {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px #0008;
+}
+
+.entrada,
+#quiz,
+#resultado {
+    display: none;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-size: 30px;
+}
+
+.subtitulo {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.info {
+    text-align: left;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.botao {
+    width: 100%;
+    border: none;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 12px;
+    background: #222;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botao:hover {
+    transform: scale(1.03);
+}
+
+.comecar {
+    background: #168a45;
+}
+
+/* TELA DE ENTRADA */
+
+.icone-quiz {
+    font-size: 70px;
+    margin: 15px;
+}
+
+.regras {
+    background: #f1f1f1;
+    padding: 18px;
+    border-radius: 15px;
+    margin: 20px 0;
+    line-height: 1.7;
+}
+
+.tempo-grande {
+    font-size: 40px;
+    font-weight: bold;
+    color: #168a45;
+}
+
+/* QUIZ */
+
+.numero {
+    color: #168a45;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#pergunta {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* CRONÔMETRO */
+
+.timer {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.timer-texto {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.barra {
+    width: 100%;
+    height: 12px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#barraTempo {
+    height: 100%;
+    width: 100%;
+    background: #168a45;
+    transition: width 1s linear;
+}
+
+/* RESPOSTAS */
+
+.resposta {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background: #f5f5f5;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.resposta:hover {
+    transform: scale(1.02);
+    background: #e8e8e8;
+}
+
+/* ACERTO */
+
+.correta {
+    background: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+    animation: acerto 0.5s ease;
+}
+
+/* ERRO */
+
+.errada {
+    background: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+    animation: erro 0.5s ease;
+}
+
+/* RESPOSTA CERTA APÓS ERRO */
+
+.mostra-correta {
+    background: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+    animation: aparecer 0.5s ease;
+}
+
+/* ANIMAÇÕES */
+
+@keyframes acerto {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.08);
+    }
+
+    70% {
+        transform: scale(0.96);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes erro {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-10px);
+    }
+
+    40% {
+        transform: translateX(10px);
+    }
+
+    60% {
+        transform: translateX(-8px);
+    }
+
+    80% {
+        transform: translateX(8px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* FEEDBACK */
+
+#feedback {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+    min-height: 25px;
+}
+
+.feedback-acerto {
+    color: #168a45;
+    animation: aparecer 0.4s ease;
+}
+
+.feedback-erro {
+    color: #dc3545;
+    animation: aparecer 0.4s ease;
+}
+
+.feedback-tempo {
+    color: #e67e22;
+    animation: aparecer 0.4s ease;
+}
+
+#proxima {
+    display: none;
+    background: #168a45;
+}
+
+/* RESULTADO */
+
+#pontuacao {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+#mensagem {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+</style></head><body><div class="container"><!-- ================= TELA DO VÍDEO ================= --><div class="inicio" id="inicio"><h1>🇧🇷 ERA VARGAS</h1>
+
+<p class="subtitulo">
+    Aprenda antes de testar seus conhecimentos!
+</p>
+
+<div class="video">
+
+    <iframe
+        src="https://www.youtube.com/embed/v3QJeujm9CE"
+        title="Era Vargas"
+        allowfullscreen>
+    </iframe>
+
+</div>
+
+<div class="info">
+
+    <h2>📚 Sobre a Era Vargas</h2>
+
+    <p>
+        A Era Vargas foi um período importante da história
+        brasileira, marcado pelos governos de Getúlio Vargas.
+    </p>
+
+    <br>
+
+    <p>
+        O primeiro período começou em <b>1930</b> e terminou
+        em <b>1945</b>, incluindo o Estado Novo.
+    </p>
+
+    <br>
+
+    <p>
+        Durante o período Vargas também foram criadas
+        importantes medidas trabalhistas, como a CLT.
+    </p>
+
+</div>
+
+<button class="botao comecar" onclick="mostrarEntrada()">
+    CONTINUAR ➜
+</button>
+
+</div><!-- ================= TELA DE ENTRADA ================= --><div class="entrada" id="entrada"><div class="icone-quiz">
+    🎮
+</div>
+
+<h1>PRONTO PARA O QUIZ?</h1>
+
+<p class="subtitulo">
+    Teste o que você aprendeu sobre a Era Vargas.
+</p>
+
+<div class="regras">
+
+    <p>📚 <b>7 perguntas</b></p>
+
+    <p>⏱️ <b>15 segundos por pergunta</b></p>
+
+    <p>🎯 Uma resposta por questão</p>
+
+    <p>🏆 Acumule pontos acertando!</p>
+
+</div>
+
+<div class="tempo-grande">
+    15s
+</div>
+
+<button class="botao comecar" onclick="comecarQuiz()">
+    🚀 COMEÇAR QUIZ
+</button>
+
+</div><!-- ================= QUIZ ================= --><div id="quiz"><div class="pergunta-box">
+
+    <p class="numero" id="numero"></p>
+
+    <div class="timer">
+
+        <div class="timer-texto">
+            ⏱️ <span id="tempo">15</span>s
+        </div>
+
+        <div class="barra">
+            <div id="barraTempo"></div>
+        </div>
+
+    </div>
+
+    <p id="pergunta"></p>
+
+    <div id="respostas"></div>
+
+    <div id="feedback"></div>
+
+    <button
+        class="botao"
+        id="proxima"
+        onclick="proximaPergunta()">
+        PRÓXIMA ➜
+    </button>
+
+</div>
+
+</div><!-- ================= RESULTADO ================= --><div id="resultado"><h1>🎉 FIM DO QUIZ!</h1>
+
+<p id="pontuacao"></p>
+
+<p id="mensagem"></p>
+
+<button class="botao comecar" onclick="reiniciar()">
+    🔄 JOGAR NOVAMENTE
+</button>
+
+</div></div><script>
+
+const perguntas = [
+
+{
+    pergunta:
+    "Em que ano Getúlio Vargas chegou ao poder pela Revolução de 1930?",
+
+    respostas: [
+        "1922",
+        "1930",
+        "1937",
+        "1945"
+    ],
+
+    correta: 1
+},
+
+{
+    pergunta:
+    "Qual foi o período conhecido como Estado Novo?",
+
+    respostas: [
+        "1930–1934",
+        "1934–1937",
+        "1937–1945",
+        "1946–1950"
+    ],
+
+    correta: 2
+},
+
+{
+    pergunta:
+    "Qual importante documento trabalhista foi criado durante o governo Vargas?",
+
+    respostas: [
+        "CLT",
+        "Constituição de 1824",
+        "Lei Áurea",
+        "Código Penal de 1890"
+    ],
+
+    correta: 0
+},
+
+{
+    pergunta:
+    "O que significa CLT?",
+
+    respostas: [
+        "Conjunto Legal do Trabalho",
+        "Consolidação das Leis do Trabalho",
+        "Código de Leis Trabalhistas",
+        "Central Legal Trabalhista"
+    ],
+
+    correta: 1
+},
+
+{
+    pergunta:
+    "Qual era uma característica do Estado Novo?",
+
+    respostas: [
+        "Democracia direta",
+        "Fim da censura",
+        "Autoritarismo e censura",
+        "Fim do governo federal"
+    ],
+
+    correta: 2
+},
+
+{
+    pergunta:
+    "Em que ano Getúlio Vargas deixou o poder pela primeira vez?",
+
+    respostas: [
+        "1930",
+        "1937",
+        "1945",
+        "1954"
+    ],
+
+    correta: 2
+},
+
+{
+    pergunta:
+    "Getúlio Vargas voltou à presidência pelo voto em qual ano?",
+
+    respostas: [
+        "1945",
+        "1950",
+        "1954",
+        "1960"
+    ],
+
+    correta: 1
+}
+
+];
+
+
+let perguntaAtual = 0;
+let pontos = 0;
+let respondeu = false;
+
+let tempoRestante = 15;
+let intervalo;
+
+
+/* TELA DE ENTRADA */
+
+function mostrarEntrada() {
+
+    document.getElementById("inicio").style.display = "none";
+
+    document.getElementById("entrada").style.display = "block";
+
+}
+
+
+/* COMEÇAR */
+
+function comecarQuiz() {
+
+    document.getElementById("entrada").style.display = "none";
+
+    document.getElementById("quiz").style.display = "block";
+
+    carregarPergunta();
+
+}
+
+
+/* CARREGAR PERGUNTA */
+
+function carregarPergunta() {
+
+    respondeu = false;
+
+    clearInterval(intervalo);
+
+    document.getElementById("numero").innerText =
+        "PERGUNTA " +
+        (perguntaAtual + 1) +
+        " DE " +
+        perguntas.length;
+
+    document.getElementById("pergunta").innerText =
+        perguntas[perguntaAtual].pergunta;
+
+    const area =
+        document.getElementById("respostas");
+
+    area.innerHTML = "";
+
+    document.getElementById("feedback").innerText = "";
+
+    document.getElementById("feedback").className = "";
+
+    document.getElementById("proxima").style.display = "none";
+
+
+    perguntas[perguntaAtual].respostas.forEach(
+        (resposta, index) => {
+
+            const botao =
+                document.createElement("button");
+
+            botao.className = "resposta";
+
+            botao.innerText = resposta;
+
+            botao.onclick = function() {
+
+                verificarResposta(index, botao);
+
+            };
+
+            area.appendChild(botao);
+
+        }
+    );
+
+
+    iniciarTimer();
+
+}
+
+
+/* TIMER */
+
+function iniciarTimer() {
+
+    tempoRestante = 15;
+
+    atualizarTimer();
+
+
+    intervalo = setInterval(function() {
+
+        tempoRestante--;
+
+        atualizarTimer();
+
+
+        if (tempoRestante <= 0) {
+
+            clearInterval(intervalo);
+
+            tempoEsgotado();
+
+        }
+
+    }, 1000);
+
+}
+
+
+/* ATUALIZA TIMER */
+
+function atualizarTimer() {
+
+    document.getElementById("tempo").innerText =
+        tempoRestante;
+
+    document.getElementById("barraTempo").style.width =
+        (tempoRestante / 15 * 100) + "%";
+
+
+    if (tempoRestante <= 5) {
+
+        document.getElementById("barraTempo").style.background =
+            "#dc3545";
+
+    } else {
+
+        document.getElementById("barraTempo").style.background =
+            "#168a45";
+
+    }
+
+}
+
+
+/* TEMPO ACABOU */
+
+function tempoEsgotado() {
+
+    if (respondeu) return;
+
+    respondeu = true;
+
+    const botoes =
+        document.querySelectorAll(".resposta");
+
+    botoes.forEach(botao => {
+
+        botao.style.pointerEvents = "none";
+
+    });
+
+
+    const correta =
+        perguntas[perguntaAtual].correta;
+
+    botoes[correta].classList.add(
+        "mostra-correta"
+    );
+
+    botoes[correta].innerText +=
+        "  ✅ RESPOSTA CERTA";
+
+
+    const feedback =
+        document.getElementById("feedback");
+
+    feedback.innerText =
+        "⏰ TEMPO ESGOTADO!";
+
+    feedback.className =
+        "feedback-tempo";
+
+
+    document.getElementById("proxima")
+        .style.display = "block";
+
+}
+
+
+/* VERIFICAR RESPOSTA */
+
+function verificarResposta(index, botao) {
+
+    if (respondeu) return;
+
+    respondeu = true;
+
+    clearInterval(intervalo);
+
+    const correta =
+        perguntas[perguntaAtual].correta;
+
+    const botoes =
+        document.querySelectorAll(".resposta");
+
+    const feedback =
+        document.getElementById("feedback");
+
+
+    if (index === correta) {
+
+        pontos++;
+
+        botao.classList.add("correta");
+
+        botao.innerText += "  ✅";
+
+        feedback.innerText =
+            "🎉 ACERTOU! Muito bem!";
+
+        feedback.className =
+            "feedback-acerto";
+
+    } else {
+
+        botao.classList.add("errada");
+
+        botao.innerText += "  ❌";
+
+        feedback.innerText =
+            "❌ ERROU!";
+
+        feedback.className =
+            "feedback-erro";
+
+
+        botoes[correta].classList.add(
+            "mostra-correta"
+        );
+
+        botoes[correta].innerText +=
+            "  ✅ RESPOSTA CERTA";
+
+    }
+
+
+    botoes.forEach(botao => {
+
+        botao.style.pointerEvents = "none";
+
+    });
+
+
+    document.getElementById("proxima")
+        .style.display = "block";
+
+}
+
+
+/* PRÓXIMA */
+
+function proximaPergunta() {
+
+    clearInterval(intervalo);
+
+    perguntaAtual++;
+
+    if (perguntaAtual < perguntas.length) {
+
+        carregarPergunta();
+
+    } else {
+
+        mostrarResultado();
+
+    }
+
+}
+
+
+/* RESULTADO */
+
+function mostrarResultado() {
+
+    clearInterval(intervalo);
+
+    document.getElementById("quiz")
+        .style.display = "none";
+
+    document.getElementById("resultado")
+        .style.display = "block";
+
+
+    document.getElementById("pontuacao")
+        .innerText =
+        pontos + " / " + perguntas.length;
+
+
+    let mensagem;
+
+
+    if (pontos === 7) {
+
+        mensagem =
+            "🏆 PERFEITO! Você acertou todas!";
+
+    } else if (pontos >= 5) {
+
+        mensagem =
+            "🔥 Muito bom! Você mandou bem!";
+
+    } else if (pontos >= 3) {
+
+        mensagem =
+            "👏 Bom trabalho! Continue estudando.";
+
+    } else {
+
+        mensagem =
+            "📚 Estude mais um pouco e tente novamente!";
+
+    }
+
+
+    document.getElementById("mensagem")
+        .innerText = mensagem;
+
+}
+
+
+/* REINICIAR */
+
+function reiniciar() {
+
+    clearInterval(intervalo);
+
+    perguntaAtual = 0;
+
+    pontos = 0;
+
+    document.getElementById("resultado")
+        .style.display = "none";
+
+    document.getElementById("inicio")
+        .style.display = "block";
+
+}
+
+</script></body>
+</html>
